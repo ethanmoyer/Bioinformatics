@@ -16,4 +16,4 @@ This script displays the power of Gibbs Sampler, a randomized algorithm to findi
 
 ### Lecture 3 - read-pairs.py
 
-Given a sequence, the script fragments them into k-mer read pairs and aligns them using a Eulerian path algorithm. 
+Given a sequence, the script fragments it into k-mer read pairs and aligns them using a Eulerian path algorithm. 
