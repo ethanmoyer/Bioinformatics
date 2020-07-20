@@ -28,10 +28,9 @@ def get_read_pairs_edges(read_pairs):
 
 
 
-#sequence = create_random_sequence(15)
-original_sequence = 'AGCTGTCGACTTGTG'
+original_sequence = create_random_sequence(18)
+#original_sequence = 'AGCTGTCGACTTGTG'
 k = 6
-
 overlap = 3
 
 read_list = get_kmer_list(original_sequence, k)
@@ -40,18 +39,15 @@ read_pairs = get_read_pairs(read_list, overlap)
 
 read_pairs_edges = get_read_pairs_edges(read_pairs)
 
-i = 0
-
-sequence = read_list[0][:3]
+sequence = read_list[0]
 
 search = read_pairs_edges[0][1]
 
 #while sequence != original_sequence
-for i, read in enumerate(read_pairs_edges[:len(read_list) - overlap]):
-	print(search)
-	print(read[0])
+for i, read in enumerate(read_pairs_edges[:len(read_list)]):
 	if search == read[0]:
-		print(i)
-		print(read_list[i])
-		sequence += read_list[i]
+		sequence += read_list[i][overlap:]
 		search = read_pairs_edges[i][1]
+
+print('Original sequence\t', original_sequence)
+print('Aligned sequence\t', sequence)
