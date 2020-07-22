@@ -34,15 +34,18 @@ get_keys_with_value(protein_integer_mass_dict, 128)
 
 tyro_b1 = 'VKLFPWFNQY'
 
-spectrum = [0, 97, 97, 99, 101, 103, 196, 198, 198, 200, 202, 295, 297, 299, 299, 301, 394, 396, 298, 400, 400, 497]
+spectrum = [0, 97, 97, 99, 101, 103, 196, 198, 198, 200, 202, 295, 297, 299, 299, 301, 394, 396, 398, 400, 400, 497]
 
 canidate_proteins = [get_keys_with_value(protein_integer_mass_dict, e) for e in spectrum]
 
 canidate_proteins = list(set([protein for proteins_ in canidate_proteins for protein in proteins_]))
 
+print(canidate_proteins)
+
 proteins = list(protein_integer_mass_dict.keys())
 integer_mass = list(protein_integer_mass_dict.values())
-q = 0
+
+
 while len(canidate_proteins) > 1:
 	canidate_proteins = [e + protein for e in canidate_proteins for protein in proteins]
 
@@ -66,7 +69,9 @@ while len(canidate_proteins) > 1:
 	canidate_proteins_ = []
 
 	for i, canidate_protein_split in enumerate(canidate_proteins_split):
-		
+		#if 'PTPC' in canidate_protein_split:
+		#	print(canidate_protein_split)
+		#	quit()
 		spectrum_ = copy.deepcopy(spectrum)
 		for peptide_split in canidate_protein_split:
 			if len(peptide_split) > 1:
@@ -80,10 +85,7 @@ while len(canidate_proteins) > 1:
 				break
 		else:
 			canidate_proteins_.append(canidate_proteins[i])
-
+	print(canidate_proteins)
 	canidate_proteins = canidate_proteins_
-	if q == 2:
-		print(list(set(canidate_proteins)))
-		quit()
-	q += 1
+
 
