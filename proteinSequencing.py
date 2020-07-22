@@ -18,6 +18,13 @@ def get_keys_with_value(dict_, element):
 	return [keys[e] for e in get_index_positions(values, element)]
 
 
+def sum_integer_mass(protein):
+	mass = 0
+	for e in protein:
+		mass += protein_integer_mass_dict[e]
+	return mass
+
+
 protein_integer_mass_dict = {'G': 57, 'A': 71, 'S': 87,'P': 97, 'V': 99, 
 						'T': 101, 'C': 103, 'I': 113, 'L': 133, 'N': 114, 
 						'D': 115, 'K': 128, 'Q': 128, 'E': 129, 'M': 131,
@@ -35,7 +42,7 @@ canidate_proteins = list(set([protein for proteins_ in canidate_proteins for pro
 
 proteins = list(protein_integer_mass_dict.keys())
 integer_mass = list(protein_integer_mass_dict.values())
-
+q = 0
 while len(canidate_proteins) > 1:
 	canidate_proteins = [e + protein for e in canidate_proteins for protein in proteins]
 
@@ -59,12 +66,14 @@ while len(canidate_proteins) > 1:
 	canidate_proteins_ = []
 
 	for i, canidate_protein_split in enumerate(canidate_proteins_split):
+		
 		spectrum_ = copy.deepcopy(spectrum)
 		for peptide_split in canidate_protein_split:
-			# Don't longer proteins!
 			if len(peptide_split) > 1:
-				continue
-			peptide_mass = protein_integer_mass_dict[peptide_split]
+				peptide_mass = sum_integer_mass(peptide_split)
+			else:
+				peptide_mass = protein_integer_mass_dict[peptide_split]
+
 			if peptide_mass in spectrum_:
 				spectrum_.remove(peptide_mass)
 			else:
@@ -73,6 +82,8 @@ while len(canidate_proteins) > 1:
 			canidate_proteins_.append(canidate_proteins[i])
 
 	canidate_proteins = canidate_proteins_
-
-
+	if q == 2:
+		print(list(set(canidate_proteins)))
+		quit()
+	q += 1
 
