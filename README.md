@@ -17,3 +17,7 @@ This script displays the power of Gibbs Sampler, a randomized algorithm to findi
 ### Lecture 3 - read-pairs.py
 
 Given a sequence, the script fragments it into k-mer read pairs and aligns them using a Eulerian path algorithm. 
+
+### Lecture 4 - proteinSequencing.py
+
+Given a spectrum of peptide weights, the function reconstructs the unknown protein, assuming a perfect spectrum.
