@@ -13,16 +13,6 @@ def get_index_positions(list_of_elems, element):
             break
     return index_pos_list
 
-
-match = 1
-mismatch = -1
-
-seq0 = 'TACGGGCCCGCTAC'
-seq1 = 'TAGCCCTATCGGTCA'
-
-grid = np.array([[0 for i in range(len(seq0) + 1)] for j in range(len(seq1) + 1)])
-grid_pointers = [[ [0, 0] for i in range(len(seq0))] for j in range(len(seq1))]
-
 # let i be the rows
 # let j be the columns
 
@@ -38,28 +28,71 @@ def calc_score(grid, i, j):
 	max_score_points = [past_score_pointers[i] for i in max_score_indices]
 	return max_score_value, max_score_points
 
+def traceback(grid, pointer):
 
-for i in range(1, len(grid)):
-	for j in range(1, len(grid[0])):
-		grid[i][j], grid_pointers[i - 1][j - 1] = calc_score(grid, i, j)
+	align_seq0 = ''
+	align_seq1 = ''
 
-highest_score_pointers = np.argwhere(grid == np.max(grid))
+	x_rel = 1
+	y_rel = 1
 
-i = 0
+	while pointer != [0, 0]:
 
-def traceback(i, pointers):
-	if len(pointers) == 1 and pointers[0][0] == 0 and pointers[0][0] == 0:
-		return 0
-
-	pathways = []
-	for pointer in pointers:
 		x = pointer[0]
 		y = pointer[1]
-		pointer_pointers = grid_pointers[x - 1][y - 1]
-		print(pointer_pointers)
-		pathways.append(traceback(i + 1, pointer_pointers))
-		
-	return max(pathways)	
+
+		align_seq0 = (seq0[y - 1] if x_rel == 1 else '-') + align_seq0
+		align_seq1 = (seq1[x - 1] if y_rel == 1 else '-') + align_seq1
+		next_pointers = grid_pointers[x - 1][y - 1]
+
+		if len(next_pointers) == 1:
+			pointer = next_pointers[0]
+			x_rel = x - pointer[0]
+			y_rel = y - pointer[1]
+			continue
+
+		pointer_scores = []
+		for next_pointer in next_pointers:
+			x_next = next_pointer[0]
+			y_next = next_pointer[1]
+			pointer_scores.append(grid[x_next][y_next])
+
+		next_pointer_indices = get_index_positions(pointer_scores, max(pointer_scores))
+		next_pointers = [next_pointers[i] for i in next_pointer_indices]
+
+		pointer = next_pointers[0]
+		x_rel = x - pointer[0]
+		y_rel = y - pointer[1]
+
+	return align_seq0, align_seq1
+
+if __name__ == '__main__':
+
+	match = 1
+	mismatch = -1
+
+	seq0 = 'TACGGGCCCGCTAC'
+	seq1 = 'TAGCCCTATCGGTCA'
+
+	grid = np.array([[0 for i in range(len(seq0) + 1)] for j in range(len(seq1) + 1)])
+	grid_pointers = [[ [0, 0] for i in range(len(seq0))] for j in range(len(seq1))]
+
+
+	for i in range(1, len(grid)):
+		for j in range(1, len(grid[0])):
+			grid[i][j], grid_pointers[i - 1][j - 1] = calc_score(grid, i, j)
+
+	highest_score_pointers = np.argwhere(grid == np.max(grid)).tolist()
+
+	for pointer in highest_score_pointers:
+		align_seq0, align_seq1 = traceback(grid, pointer)
+		print(align_seq0)
+		print(align_seq1)
+		print()
+
+	i = 0
+
+
 
 #	   	 0	 1   2   3   4	 5	 6	 7 	 8	 9	 10	 11	 12  13	 14	
 #			 T   A   C   G   G   G   C   C   C   G   C   T   A   C
@@ -69,7 +102,7 @@ array([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],	  0
        [ 0,  0,  2,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  1],	A 2
        [ 0,  0,  1,  1,  2,  3,  4,  3,  2,  1,  2,  1,  0,  1,  1],	G 3
        [ 0,  0,  0,  2,  1,  2,  3,  5,  6,  7,  6,  7,  6,  5,  6],	C 4
-       [ 0,  0,  0,  3,  2,  1,  2,  6,  7,  8,  7,  8,  7,  6,  7],	c 5
+       [ 0,  0,  0,  3,  2,  1,  2,  6,  7,  8,  7,  8,  7,  6,  7],	C 5
        [ 0,  0,  0,  4,  3,  2,  1,  7,  8,  9,  8,  9,  8,  7,  8],	C 6
        [ 0,  1,  0,  3,  3,  2,  1,  6,  7,  8,  8,  8, 10,  9,  8],	T 7
        [ 0,  0,  2,  2,  2,  2,  1,  5,  6,  7,  7,  7,  9, 11, 10],	A 8

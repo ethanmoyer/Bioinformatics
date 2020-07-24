@@ -53,23 +53,19 @@ def align_reads(original_sequence, read_pairs_edges, read_list, overlap):
 	return sequence
 
 
-
-
-original_sequence = create_random_sequence(18)
-#original_sequence = 'AGCTGTCGACTTGTG'
-k = 6
-overlap = 3
-
-read_list = get_kmer_list(original_sequence, k)
-
-read_pairs = get_read_pairs(read_list, overlap)
-
-read_pairs_edges = get_read_pairs_edges(read_pairs)
-
-sequence = align_reads(original_sequence, read_pairs_edges, read_list, overlap)
-
-print('Original sequence\t', original_sequence)
-print('Aligned sequence\t', sequence)
-
 if __name__ == '__main__':
-	print('\n')
+	original_sequence = create_random_sequence(18)
+	#original_sequence = 'AGCTGTCGACTTGTG'
+	k = 6
+	overlap = 3
+
+	read_list = get_kmer_list(original_sequence, k)
+
+	read_pairs = get_read_pairs(read_list, overlap)
+
+	read_pairs_edges = get_read_pairs_edges(read_pairs)
+
+	sequence = align_reads(original_sequence, read_pairs_edges, read_list, overlap)
+
+	print('Original sequence\t', original_sequence)
+	print('Aligned sequence\t', sequence)
