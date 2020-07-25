@@ -36,19 +36,19 @@ def traceback(grid, pointer):
 	x_rel = 1
 	y_rel = 1
 
-	while pointer != [0, 0]:
+	while 0 not in pointer:
 
 		x = pointer[0]
 		y = pointer[1]
 
-		align_seq0 = (seq0[y - 1] if x_rel == 1 else '-') + align_seq0
-		align_seq1 = (seq1[x - 1] if y_rel == 1 else '-') + align_seq1
 		next_pointers = grid_pointers[x - 1][y - 1]
 
 		if len(next_pointers) == 1:
 			pointer = next_pointers[0]
 			x_rel = x - pointer[0]
 			y_rel = y - pointer[1]
+			align_seq0 = (seq0[y - 1] if x_rel == 1 else '-') + align_seq0
+			align_seq1 = (seq1[x - 1] if y_rel == 1 else '-') + align_seq1
 			continue
 
 		pointer_scores = []
@@ -63,6 +63,8 @@ def traceback(grid, pointer):
 		pointer = next_pointers[0]
 		x_rel = x - pointer[0]
 		y_rel = y - pointer[1]
+		align_seq0 = (seq0[y - 1] if x_rel == 1 else '-') + align_seq0
+		align_seq1 = (seq1[x - 1] if y_rel == 1 else '-') + align_seq1
 
 	return align_seq0, align_seq1
 
@@ -77,17 +79,18 @@ if __name__ == '__main__':
 	grid = np.array([[0 for i in range(len(seq0) + 1)] for j in range(len(seq1) + 1)])
 	grid_pointers = [[ [0, 0] for i in range(len(seq0))] for j in range(len(seq1))]
 
-
 	for i in range(1, len(grid)):
 		for j in range(1, len(grid[0])):
 			grid[i][j], grid_pointers[i - 1][j - 1] = calc_score(grid, i, j)
 
-	highest_score_pointers = np.argwhere(grid == np.max(grid)).tolist()
+	max_score_value = np.max(grid)
+	highest_score_pointers = np.argwhere(grid == max_score_value).tolist()
 
-	for pointer in highest_score_pointers:
+	for i, pointer in enumerate(highest_score_pointers):
 		align_seq0, align_seq1 = traceback(grid, pointer)
-		print(align_seq0)
-		print(align_seq1)
+		print(f'Score: \t\t{max_score_value}')
+		print(f'Sequence 0: \t{align_seq0}')
+		print(f'Sequence 1: \t{align_seq1}')
 		print()
 
 	i = 0
