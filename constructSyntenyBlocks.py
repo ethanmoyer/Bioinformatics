@@ -51,16 +51,16 @@ def get_synteny_blocks(grid, max_distance=2, min_size=3):
 	synteny_blocks = []
 	n = len(synteny_blocks_coords)
 	for b, synteny_block_i in enumerate(synteny_blocks_coords[:n - 1]):
-		synteny_block_max = max(synteny_block_i)
-		for synteny_block_j in synteny_blocks_coords[b + 1:]:
-			print(synteny_block_max)
-			print(synteny_block_j)
-			if synteny_block_max == min(synteny_block_j):
-				synteny_block_max = max(synteny_block_j)
+		synteny_block = [min(synteny_block_i), max(synteny_block_i)]
 
-		synteny_blocks.append([min(synteny_block_i), synteny_block_max])
-		print(synteny_blocks)
-		quit()
+		if any(max(synteny_block_i) and min(synteny_block_i) in synteny_block_ for synteny_block_ in synteny_blocks):
+			continue
+
+		for synteny_block_j in synteny_blocks_coords[b + 1:]:
+			if max(synteny_block) == min(synteny_block_j):
+				synteny_block.append(max(synteny_block_j))
+
+		synteny_blocks.append(synteny_block)
 
 	return [synteny_block for synteny_block in synteny_blocks if distance(min(synteny_block), max(synteny_block)) >= min_size]
 
@@ -71,6 +71,6 @@ if __name__ == '__main__':
 
 	grid = create_mker_grid(seq0, seq1, 3)
 
-	synteny_blockss = get_synteny_blocks(grid)
+	synteny_blocks = get_synteny_blocks(grid)
 
 
