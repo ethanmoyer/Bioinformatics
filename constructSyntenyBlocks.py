@@ -62,7 +62,7 @@ def get_synteny_blocks(grid, max_distance=2, min_size=3):
 
 		synteny_blocks.append(synteny_block)
 
-	return [synteny_block for synteny_block in synteny_blocks if distance(min(synteny_block), max(synteny_block)) >= min_size]
+	return [[min(synteny_block), max(synteny_block)] for synteny_block in synteny_blocks if distance(min(synteny_block), max(synteny_block)) >= min_size]
 
 
 if __name__ == '__main__':
