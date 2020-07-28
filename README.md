@@ -20,4 +20,16 @@ Given a sequence, the script fragments it into k-mer read pairs and aligns them 
 
 ### Lecture 4 - proteinSequencing.py
 
-Given a spectrum of peptide weights, the function reconstructs the unknown protein, assuming a perfect spectrum.
+Given a spectrum of peptide weights, the script reconstructs the unknown protein, assuming a perfect spectrum
+
+### Lecture 5 - localAlignment.py
+
+Given two sequences, the script returns the most optimal alignment of them using a custom scoring matrix. 
+
+### Lecture 6 - constructSyntenyBlocks.py
+
+Given two sequences, the script identifies synteny blocks of k-mers and returns their coordinates with respect to the k-mer list.
+
+### Lecture 7 - neighborjoining.py
+
+Given a distance matrix, the script applies the neighbor joining algorithm to construct an accurate biological tree.
