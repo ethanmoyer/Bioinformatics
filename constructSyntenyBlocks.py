@@ -21,7 +21,7 @@ def create_mker_grid(seq0, seq1, k):
 
 	grid = np.array([[1 if kmer1 == kmer0 or kmer0 == kmer_list1_rc[::-1][i][::-1] else 0 for i, kmer1 in enumerate(kmer_list1[::-1])] for kmer0 in kmer_list0])
 
-	return grid
+	return grid, kmer_list0, kmer_list1, kmer_list0_rc, kmer_list1_rc
 
 def distance(p_i, p_j):
 	return np.sqrt((p_i[0] - p_j[0])**2 + (p_i[1] - p_j[1])**2)
@@ -65,12 +65,37 @@ def get_synteny_blocks(grid, max_distance=2, min_size=3):
 	return [[min(synteny_block), max(synteny_block)] for synteny_block in synteny_blocks if distance(min(synteny_block), max(synteny_block)) >= min_size]
 
 
+def merge_kmers(kmer_list):
+	seq = kmer_list[0]
+	for kmer in kmer_list[1:]:
+		seq += kmer[::-1][:1]
+	return seq
+
 if __name__ == '__main__':
 	seq0 = 'AGCAGGTTATCTACCTGT'
 	seq1 = 'AGCAGGAGATAAACCTGT'
 
-	grid = create_mker_grid(seq0, seq1, 3)
+	grid, kmer_list0, kmer_list1, kmer_list0_rc, kmer_list1_rc = create_mker_grid(seq0, seq1, 3)
 
 	synteny_blocks = get_synteny_blocks(grid)
+
+	for i, synteny_block in enumerate(synteny_blocks):
+		start = synteny_block[0]
+		end = synteny_block[1]
+
+		# Check for output related to which strand
+		print(f'Synteny block number #{i}')
+
+		syn_seq0 = merge_kmers([kmer for kmer in kmer_list0[start[0]:end[0] + 1]])
+		syn_seq1 = merge_kmers([kmer for kmer in kmer_list1[start[0]:end[0] + 1]])
+
+		if syn_seq0 != syn_seq1:
+			syn_seq1 = merge_kmers([kmer for kmer in kmer_list1_rc[start[0]:end[0] + 1]])
+
+		print('Sequence #1')
+		print(syn_seq0)
+		print('Sequence #2')
+		print(syn_seq1)
+		print()
 
 
